@@ -1,0 +1,90 @@
+---
+title: "Tidy Data and Joins"
+author: "Zhe"
+format: html
+---
+
+### Read the libraray
+```{r}
+library(readr)
+library(dplyr)
+library(lubridate)
+```
+note: The following objects are masked from 'package:basse': data, inersect, setdiff,union.
+
+### Read the data
+```{r}
+bird_observations <- read_csv("https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-cap.256.10&entityid=53edaa7a0e083013d9bf20322db1780e")
+sites <- read.csv("https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-cap.256.10&entityid=81bf72420e69077097fb0790dcdc63a6")
+surveys <- read_csv("https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-cap.256.10&entityid=b2466fa5cb5ed7ee1ea91398fc291c59")
+taxalilst <- read_csv("https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-cap.256.10&entityid=58f863b7e3066e68536a9cacdc7bd58e")
+
+```
+### Get familiar with the data
+
+```{r}
+head(bird_observations)
+dim(bird_observations)
+glimpse(bird_observations)
+summary(bird_observations)
+summary(taxalilst)
+
+```
+### Create a subset of subset of bird_observations
+```{r}
+birds_subset <- bird_observations %>% 
+  filter(species_id %in% c("BHCO", "RWBL")) %>% 
+  filter(site_id %in% c("LI-W", "NU-C"))
+head(birds_subset)
+```
+
+### Use 'left_join()' to merge 'birds_subset' with the tabke 'sites'
+
+```{r}
+birds_left <- birds_subset %>% 
+  left_join(y = sites, by = "site_id")
+head(birds_left)
+```
+
+### Use 'full_join()' to merge 'birds_subset' and 'sites' tables 
+
+```{r}
+birds_full <- birds_subset %>% 
+  full_join(y = sites, by = "site_id")
+head(birds_full)
+```
+
+### Use 'inner_join()' to merge 'birds_subset' and 'taxalist' data
+```{r}
+birds_inner <- birds_subset %>% 
+  inner_join(y = taxalilst, by = "species_id")
+
+birds_left_taxa <- birds_subset %>% 
+  left_join(y = taxalilst,by = "species_id" )
+```
+
+### Practice Wrangling & Joing data
+```{r}
+bird_observations <- bird_observations %>% 
+  rename(bird_obs_notes = notes)
+head(bird_observations)
+
+birds_subset_v2 <- bird_observations %>% 
+  full_join(y = taxalilst, by = "species_id") %>% 
+  full_join(y = sites, by = "site_id") %>% 
+  full_join(y = surveys, by = c("site_id", "survey_id")) %>% 
+  select(survey_date, common_name, park_name, bird_count, observer)
+```
+
+### Explore 'oberver' data and fix the values within thic column so that all values are in the same format
+
+```{r}
+unique(birds_subset_v2$observer)
+birds_subset_v2 <- birds_subset_v2 %>% 
+  mutate(observer = if_else(condition = observer == "Josh Burns", 
+                            true = "J. Burns", 
+                            false = observer))
+
+unique(birds_subset_v2$observer)
+```
+
