@@ -1,0 +1,52 @@
+---
+title: "introQuarto"
+author: "Zhe"
+format: html
+editor: visual
+execute: 
+  warning: false
+  message: false
+---
+
+# Level 1 header
+
+This is regular plain old boring text.
+
+## Level 2 header
+
+-   bulleted list
+-   list item 2
+    -   indented bullet
+
+1.  numberd list
+
+2.  list item 2
+
+Here is some more plain text. But if I want *italics* or *italitcs*. This is **bold** or *bold*. ***Big emphasis***.
+
+```{r important r code}
+x <- 1+2
+```
+
+| Col1  | Col2 | Col3 |
+|-------|------|------|
+| thing | 1    |      |
+| thing | 2    |      |
+|       | 3    |      |
+|       | 4    |      |
+|       | 5    |      |
+
+```{r important r code}
+x <- 1+2
+```
+
+my important result is `r x` or another important thins is `r 6*7`
+
+```{r}
+x <- 4*8
+height_ft <- c(5.2, 6.0, 5.7)
+coef <- 3.14
+
+```
+
+
