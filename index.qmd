@@ -7,8 +7,8 @@ format: html
 This are all tge materials the coreR course (October 2024). 
 
 ## Course lessons
-- [Intro to literate analysis](script/quick_analysis.html)
-- [Cleaning and Wrangling data](script/cleaning_and_wrangling.html)
+- [Intro to literate analysis](scipts/Quick_analysis.html)
+- [Cleaning and Wrangling data](scripts/cleaning_and_wrangling.html)
 - Data Visualization
 
 ## Practice session
