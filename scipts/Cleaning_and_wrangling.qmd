@@ -189,6 +189,10 @@ head(mean_region)
 
 ```
 
+```{r}
+sse_catch <- catch_long %>% 
+  filter(Region =='SSE')
+```
 
 
 
