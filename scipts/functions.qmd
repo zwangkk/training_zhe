@@ -1,0 +1,104 @@
+---
+title: "functions"
+author: "Zhe"
+format: 
+  html:
+    toc: true
+    code-fold: true
+    embed-resources: true
+    
+---
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+```
+
+# Temperature conversion
+```{r}
+airtemps <- c(212, 30.3, 78, 32)
+celsius1 <- (airtemps[1] - 32) * 5/9
+celsius2 <- (airtemps[2] - 32) * 5/9
+celsius3 <- (airtemps[3] - 32) * 5/9
+```
+
+```{r}
+convet_f_to_c <- function(fahr) {
+  celsius <- (fahr - 32) * 5/9
+  return(celsius)
+}
+convet_f_to_c(53)
+
+celsius <- convet_f_to_c(airtemps)
+celsius
+```
+
+### Exercise: convert the celcius to fahr
+```{r}
+convert_c_f <- function(cel){
+  fahr <- 9/5*cel+32
+  return(fahr)
+}
+convert_c_f(celsius)
+```
+```{r}
+convert_temp <- function (fahr){
+  celsius <- (fahr - 32) * 5/9
+  kelvin <- celsius + 273.15
+  return(list(fahr = fahr, celsius = celsius, kelvin = kelvin))
+}
+t_vec <- c(-100, -40, 0, 32, 98.6, 212)
+temps_df <- data.frame(convert_temp(t_vec))
+temps_df
+```
+# make the function more flexible
+```{r}
+convert_temps2 <- function(temp, unit = 'F'){
+  ### Error checking:
+  unit <- toupper(unit)
+  if(!unit%in% c('F', "C")) stop('The units must be either F or C!')
+  
+  if (unit == 'F'){
+    fahr <- temp
+    celsius <- (fahr - 32) * 5/9
+  }else{
+    celsius <- temp
+    fahr <- celsius * 9 / 5 + 32
+  }
+   kelvin <- celsius + 273.15
+   out_df <- data.frame(fahr, celsius, kelvin)
+  return(out_df)
+}
+c_temps_df <- convert_temps2(temp = t_vec, unit = 'C')
+f_temps_df <- convert_temps2(t_vec, 'F')
+
+```
+
+## Functions in the tidyverse
+```{r}
+f_temps_df %>% 
+  select(fahr, celsius) %>% 
+  mutate(rankine = fahr +459.67)
+```
+
+## Make a tidyverse style function
+```{r}
+calc_hotcold <- function(df, thresh = 70){
+  if(!'fahr'%in% names(df)) stop("The data frame must have a column called 'fahr'!")
+  out_df <- df %>% 
+    mutate(hotcold = ifelse(fahr > thresh, 'hot', 'cold'))
+  return(out_df)
+}
+f_temps_df %>%
+    select(fahr, celsius) %>%
+    calc_hotcold(thresh = 80) %>%
+    arrange(desc(fahr))
+
+```
+
+
+
+
+
+
